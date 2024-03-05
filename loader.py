@@ -30,8 +30,10 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """
     df = pd.read_csv(data_frame,
                      delimiter= ',',
-                     dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':pd.datetime}
+                     dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':str},
+                     na_values=['']
                        )
+    df['lat_coor1'] = pd.to_numeric(df['lat_coor1'],errors='coerce')
     return df
 
 
