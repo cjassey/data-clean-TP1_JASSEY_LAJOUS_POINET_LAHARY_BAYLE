@@ -2,6 +2,7 @@ import os
 import requests
 import numpy as np
 import pandas as pd
+import re
 
 DATA_PATH = 'data/MMM_MMM_DAE.csv'
 
@@ -28,6 +29,14 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """ One function to read csv into a dataframe with appropriate types/formats.
         Note: read only pertinent columns, ignore the others.
     """
+    df = pd.read_csv(
+        data_frame,
+        sep=","
+        )
+    
+
+    
+
     df = pd.read_csv(data_frame,
                      delimiter= ',',
                      dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':str},
@@ -40,7 +49,15 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
 # once they are all done, call them in the general sanitizing function
 def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     """ One function to do all sanitizing"""
-    ...
+
+    df['expt_tel1'] = df['expt_tel1'].str.replace('+','')
+
+    def format_tel(tel):
+        return re.sub(r'^(\d{3}) (\d{2} \d{2} \d{2} \d{2})$', r'+\1 \2', tel)
+    df['expt_tel1'] = df['expt_tel1'].apply(format_tel)
+
+    df['expt_tel1'] = df['expt_tel1'].str.replace("+33","+33 ")
+
     return df
 
 
@@ -51,6 +68,12 @@ def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
             df['freq_mnt'][i] = 'tous les ans'
     return df
 
+def sanitize_cp(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the postal code column"""
+    for i in range(0, len(df['com_cp'])) :
+        if df['com_cp'][i] == '0':
+            df['com_cp'][i] = pd.NA
+    return df
 
 # Define a framing function
 def frame_data(df:pd.DataFrame) -> pd.DataFrame:

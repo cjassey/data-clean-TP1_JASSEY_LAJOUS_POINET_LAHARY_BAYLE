@@ -322,6 +322,7 @@ def sample_sanitized() -> pd.DataFrame:
 def sample_framed() -> pd.DataFrame:
     # TODO Complete the test case bellow
     df = pd.DataFrame(
+
         data={
             'nom': ['Plateau sportif de GrammontTerrain 9, 10, 11',
                     'MEDIATHEQUE JEAN-JACQUES ROUSSEAU',
@@ -351,6 +352,7 @@ def sample_framed() -> pd.DataFrame:
                         '125 place Thermidor 34000 Montpellier',
                         '419 avenue Dr Jacques Fourcade 34000 Montpellier',
                         '424-460 rue du lavandin 34070 Montpellier'],
+
             'tel1': ['+33 4 67 64 87 70',
                      pd.NA,
                      '+33 4 67 27 46 12',
@@ -421,6 +423,7 @@ def sample_framed() -> pd.DataFrame:
                            43.6020241317034,
                            43.5911769531706,
                            43.5995832643803]},
+
         dtype={'nom': 'string', 'address': 'string', 'tel1': 'string', 
                'freq_mnt': 'string', 'dermnt': 'string', 
                'lat_coor1': 'float', 'long_coor1': 'float'}
