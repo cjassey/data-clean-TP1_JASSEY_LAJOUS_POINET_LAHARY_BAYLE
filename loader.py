@@ -41,6 +41,12 @@ def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     ...
     return df
 
+def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
+    """One function to do the sanitizing of the frequence maintenance column"""
+    for i in range(0,len(df['freq_mnt'])) :
+        if not pd.isna(df['freq_mnt'][i]):
+            df['freq_mnt'][i] = 'tous les ans'
+
 
 # Define a framing function
 def frame_data(df:pd.DataFrame) -> pd.DataFrame:
