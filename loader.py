@@ -49,6 +49,12 @@ def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
             df['freq_mnt'][i] = 'tous les ans'
     return df
 
+def sanitize_cp(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the postal code column"""
+    for i in range(0, len(df['com_cp'])) :
+        if df['com_cp'][i] == '0':
+            df['com_cp'][i] = pd.NA
+    return df
 
 # Define a framing function
 def frame_data(df:pd.DataFrame) -> pd.DataFrame:
