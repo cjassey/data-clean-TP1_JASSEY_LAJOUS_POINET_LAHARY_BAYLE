@@ -42,10 +42,16 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
 # once they are all done, call them in the general sanitizing function
 def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     """ One function to do all sanitizing"""
+    
+    return df
+
+def sanitize_tel_number(df:pd.DataFrame) -> pd.DataFrame:
+    """ One function to fix the format of the phone numbers (+33 X XX XX XX XX)"""
 
     def format_tel(tel):
+
         if re.match(r'^06 \d{2} \d{2} \d{2} \d{2}$', tel):
-            # Enlever le 0 au début et remplacer par "+33 "
+            # Enlever le 0 au début et remplacer par "+33"
             return re.sub(r'^0', '+33', tel)
         elif re.match(r'^\d{3} \d{2} \d{2} \d{2} \d{2}$', tel):
             # Si le numéro est déjà au format "334 67 27 46 12"
@@ -56,14 +62,34 @@ def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
         else:
             # Si le numéro ne correspond à aucun des formats spécifiés, retourner NaN
             return pd.NA
+        
+    df['tel1'] = df['tel1'].str.replace('+','').str.replace("  "," ")
+
     df['expt_tel1'] = df['expt_tel1'].apply(format_tel)
 
     df['expt_tel1'] = df['expt_tel1'].str.replace("+33","+33 ")
-
     return df
 
-def sanitize_nom(df:pd.DataFrame) -> pd.DataFrame:
-    """One function to do the sanitizing of the city name column"""$
+def sanitize_adr_voie(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the address column"""
+    def clean_address(address):
+        if address.strip() == "-" :
+            return pd.NA
+        # Supprimer "Montpellier"
+        address = re.sub(r'\b(?:M|montpellier)\b', '', address, flags=re.IGNORECASE)
+        # Supprimer les espaces au début
+        address = re.sub(r'^\s+', '', address)
+        # Supprimer les chiffres
+        address = re.sub(r'\d', '', address)
+        # Supprimer les espaces en double
+        address = re.sub(r'\s\s+', ' ', address)
+        return address.strip()
+    
+    df['adr_voie'] = df['adr_voie'].str.replace(",","")
+    df['adr_voie'] = df['adr_voie'].apply(clean_address)
+
+def sanitize_com_nom(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the city name column"""
     for i in range(0,len(df['com_nom'])):
         if not pd.isna(df['com_nom'][i]):
             df['com_nom'][i] = 'Montpellier'
@@ -76,14 +102,13 @@ def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
             df['freq_mnt'][i] = 'tous les ans'
     return df
 
-
-
 def sanitize_cp(df:pd.DataFrame) -> pd.DataFrame:
     """One function to do the sanitizing of the postal code column"""
     for i in range(0, len(df['com_cp'])) :
         if df['com_cp'][i] == '0':
             df['com_cp'][i] = pd.NA
     return df
+
 
 # Define a framing function
 def frame_data(df:pd.DataFrame) -> pd.DataFrame:
