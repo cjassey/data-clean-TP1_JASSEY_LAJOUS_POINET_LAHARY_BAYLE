@@ -24,14 +24,14 @@ def download_data(url, force_download=False, ):
     return data_path
 
 
-def load_formatted_data(data_fname:str) -> pd.DataFrame:
+def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """ One function to read csv into a dataframe with appropriate types/formats.
         Note: read only pertinent columns, ignore the others.
     """
-    df = pd.read_csv(
-        data_fname,
-        ...
-        )
+    df = pd.read_csv(data_frame,
+                     delimiter= ',',
+                     dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':pd.datetime}
+                       )
     return df
 
 
