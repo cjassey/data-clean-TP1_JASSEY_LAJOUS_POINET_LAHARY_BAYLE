@@ -35,6 +35,7 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
                      na_values=['']
                        )
     df['lat_coor1'] = pd.to_numeric(df['lat_coor1'],errors='coerce')
+    df['long_coor1'] = pd.to_numeric(df['long_coor1'],errors='coerce')
     return df
 
 
