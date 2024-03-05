@@ -48,10 +48,19 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
 def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     """ One function to do all sanitizing"""
 
-    df['expt_tel1'] = df['expt_tel1'].str.replace('+','')
-
     def format_tel(tel):
-        return re.sub(r'^(\d{3}) (\d{2} \d{2} \d{2} \d{2})$', r'+\1 \2', tel)
+        if re.match(r'^06 \d{2} \d{2} \d{2} \d{2}$', tel):
+            # Enlever le 0 au début et remplacer par "+33 "
+            return re.sub(r'^0', '+33', tel)
+        elif re.match(r'^\d{3} \d{2} \d{2} \d{2} \d{2}$', tel):
+            # Si le numéro est déjà au format "334 67 27 46 12"
+            return '+{}'.format(tel)
+        elif re.match(r'^\+33 \d{2} \d{2} \d{2} \d{2}$', tel):
+            # Si le numéro est déjà au format "+334 67 40 04 44"
+            return tel
+        else:
+            # Si le numéro ne correspond à aucun des formats spécifiés, retourner NaN
+            return pd.NA
     df['expt_tel1'] = df['expt_tel1'].apply(format_tel)
 
     df['expt_tel1'] = df['expt_tel1'].str.replace("+33","+33 ")
@@ -65,6 +74,8 @@ def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
         if not pd.isna(df['freq_mnt'][i]):
             df['freq_mnt'][i] = 'tous les ans'
     return df
+
+
 
 def sanitize_cp(df:pd.DataFrame) -> pd.DataFrame:
     """One function to do the sanitizing of the postal code column"""
