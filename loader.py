@@ -29,18 +29,13 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """ One function to read csv into a dataframe with appropriate types/formats.
         Note: read only pertinent columns, ignore the others.
     """
-    df = pd.read_csv(
-        data_frame,
-        sep=","
-        )
-    
-
-    
-
     df = pd.read_csv(data_frame,
                      delimiter= ',',
-                     dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':pd.datetime}
+                     dtype={'nom':str,'lat_coor1':float,'long_coor1':float,'adr_num':str,'adr_voie':str,'com_cp':str,'com_nom':str,'tel1':str,'freq_mnt':str,'dermnt':str},
+                     na_values=['']
                        )
+    df['lat_coor1'] = pd.to_numeric(df['lat_coor1'],errors='coerce')
+    df['long_coor1'] = pd.to_numeric(df['long_coor1'],errors='coerce')
     return df
 
 
@@ -67,6 +62,12 @@ def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def sanitize_nom(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the city name column"""$
+    for i in range(0,len(df['com_nom'])):
+        if not pd.isna(df['com_nom'][i]):
+            df['com_nom'][i] = 'Montpellier'
+    return df
 
 def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
     """One function to do the sanitizing of the frequence maintenance column"""
