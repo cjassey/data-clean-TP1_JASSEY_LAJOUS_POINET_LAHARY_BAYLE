@@ -2,6 +2,7 @@ import os
 import requests
 import numpy as np
 import pandas as pd
+import re
 
 DATA_PATH = 'data/MMM_MMM_DAE.csv'
 
@@ -24,21 +25,32 @@ def download_data(url, force_download=False, ):
     return data_path
 
 
-def load_formatted_data(data_fname:str) -> pd.DataFrame:
+def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """ One function to read csv into a dataframe with appropriate types/formats.
         Note: read only pertinent columns, ignore the others.
     """
     df = pd.read_csv(
-        data_fname,
-        ...
+        data_frame,
+        sep=","
         )
+    
+
+    
     return df
 
 
 # once they are all done, call them in the general sanitizing function
 def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     """ One function to do all sanitizing"""
-    ...
+
+    df['expt_tel1'] = df['expt_tel1'].str.replace('+','')
+
+    def format_tel(tel):
+        return re.sub(r'^(\d{3}) (\d{2} \d{2} \d{2} \d{2})$', r'+\1 \2', tel)
+    df['expt_tel1'] = df['expt_tel1'].apply(format_tel)
+
+    df['expt_tel1'] = df['expt_tel1'].str.replace("+33","+33 ")
+
     return df
 
 
