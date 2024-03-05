@@ -58,6 +58,12 @@ def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
 
     return df
 
+def sanitize_nom(df:pd.DataFrame) -> pd.DataFrame:
+    """One function to do the sanitizing of the city name column"""$
+    for i in range(0,len(df['com_nom'])):
+        if not pd.isna(df['com_nom'][i]):
+            df['com_nom'][i] = 'Montpellier'
+    return df
 
 def sanitize_frequence(df:pd.DataFrame) ->pd.DataFrame:
     """One function to do the sanitizing of the frequence maintenance column"""
