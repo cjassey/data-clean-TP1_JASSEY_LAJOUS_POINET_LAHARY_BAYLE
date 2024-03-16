@@ -139,7 +139,7 @@ def sample_formatted() -> pd.DataFrame:
                           np.NaN,
                           3.91169364237597,
                           3.91771559166406,
-                          np.Nan,
+                          np.NaN,
                           3.89668282061293,
                           3.85476904201268],
             'long_coor1': [43.6136351580956,
@@ -156,10 +156,7 @@ def sample_formatted() -> pd.DataFrame:
                            43.6020241317034,
                            43.5911769531706,
                            43.5995832643803]},
-        dtype={'nom': 'string', 'adr_num': 'string', 'adr_voie': 'string',
-               'com_cp': 'string', 'com_nom': 'string', 'tel1': 'string', 
-               'freq_mnt': 'string', 'dermnt': 'string', 
-               'lat_coor1': 'float', 'long_coor1': 'float'}
+    
     )
 
     return df
@@ -197,7 +194,7 @@ def sample_sanitized() -> pd.DataFrame:
                         '125',
                         '419',
                         '424-460'],
-            'adr_voie': ['avenue albert Einstein',
+            'adr_voie': ['avenue Albert Einstein',
                          pd.NA,
                          'rue Jacques-Bounin',
                          pd.NA,
@@ -207,7 +204,7 @@ def sample_sanitized() -> pd.DataFrame:
                          'place Jacques Mirouse',
                          'impasse des Moulins',
                          'rond-point Benjamin Franklin',
-                         'Rue Pierre Gilles de Gennes',
+                         'rue Pierre Gilles de Gennes',
                          'place Thermidor',
                          'avenue du Dr Jacques Fourcade',
                          'rue du lavandin'],
@@ -265,7 +262,7 @@ def sample_sanitized() -> pd.DataFrame:
                          pd.NA,
                          'tous les ans',
                          pd.NA,
-                         'tout les ans',
+                         'tous les ans',
                          'tous les ans'],
             'dermnt': [pd.to_datetime('2019-05-15'),
                        pd.NaT,
@@ -292,7 +289,7 @@ def sample_sanitized() -> pd.DataFrame:
                           np.NaN,
                           3.91169364237597,
                           3.91771559166406,
-                          np.Nan,
+                          np.NaN,
                           3.89668282061293,
                           3.85476904201268],
             'long_coor1': [43.6136351580956,
@@ -309,10 +306,10 @@ def sample_sanitized() -> pd.DataFrame:
                            43.6020241317034,
                            43.5911769531706,
                            43.5995832643803]},
-        dtype={'nom': 'string', 'adr_num': 'string', 'adr_voie': 'string',
-               'com_cp': 'string', 'com_nom': 'string', 'tel1': 'string', 
-               'freq_mnt': 'string', 'dermnt': 'string', 
-               'lat_coor1': 'float', 'long_coor1': 'float'}
+        # dtype={'nom': 'string', 'adr_num': 'string', 'adr_voie': 'string',
+        #        'com_cp': 'string', 'com_nom': 'string', 'tel1': 'string', 
+        #        'freq_mnt': 'string', 'dermnt': 'string', 
+        #        'lat_coor1': 'float', 'long_coor1': 'float'}
     
     )
     return df
@@ -338,7 +335,7 @@ def sample_framed() -> pd.DataFrame:
                     "Siège du CCAS (Banque d'Acceuil)",
                     'Vestiaire/tribune CLAUDE BEAL',
                     'Ecole élémentaire Winston Churchill - Ecole maternelle Marceline Desbordes-Valmore'],
-            'address': ['avenue albert Einstein 34000 Montpellier',
+            'address': ['avenue Albert Einstein 34000 Montpellier',
                         pd.NA,
                         '694-700 rue Jacques-Bounin 34070 Montpellier',
                         pd.NA,
@@ -348,9 +345,9 @@ def sample_framed() -> pd.DataFrame:
                         '1 place Jacques Mirouse 34000 Montpellier',
                         '41 impasse des Moulins 34000',
                         '1 rond-point Benjamin Franklin Montpellier',
-                        pd.NA,
+                        'rue Pierre Gilles de Gennes 34000 Montpellier',
                         '125 place Thermidor 34000 Montpellier',
-                        '419 avenue Dr Jacques Fourcade 34000 Montpellier',
+                        '419 avenue du Dr Jacques Fourcade 34000 Montpellier',
                         '424-460 rue du lavandin 34070 Montpellier'],
 
             'tel1': ['+33 4 67 64 87 70',
@@ -379,7 +376,7 @@ def sample_framed() -> pd.DataFrame:
                          pd.NA,
                          'tous les ans',
                          pd.NA,
-                         'tout les ans',
+                         'tous les ans',
                          'tous les ans'],
             'dermnt': [pd.to_datetime('2019-05-15'),
                        pd.NaT,
@@ -406,7 +403,7 @@ def sample_framed() -> pd.DataFrame:
                           np.NaN,
                           3.91169364237597,
                           3.91771559166406,
-                          np.Nan,
+                          np.NaN,
                           3.89668282061293,
                           3.85476904201268],
             'long_coor1': [43.6136351580956,
@@ -424,9 +421,9 @@ def sample_framed() -> pd.DataFrame:
                            43.5911769531706,
                            43.5995832643803]},
 
-        dtype={'nom': 'string', 'address': 'string', 'tel1': 'string', 
-               'freq_mnt': 'string', 'dermnt': 'string', 
-               'lat_coor1': 'float', 'long_coor1': 'float'}
+        # dtype={'nom': 'string', 'address': 'string', 'tel1': 'string', 
+        #        'freq_mnt': 'string', 'dermnt': 'string', 
+        #        'lat_coor1': 'float', 'long_coor1': 'float'}
     )
     return df
 
@@ -455,3 +452,5 @@ def assert_column_equal(clean, target, column):
     # utility function if you which to implement column-specific assertion tests
     assert clean[column].equals(
         target[column]), f"Result should be {clean[column]} but was {target[column]}"
+    
+
