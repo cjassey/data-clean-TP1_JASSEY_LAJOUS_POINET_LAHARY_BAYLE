@@ -29,37 +29,47 @@ def load_formatted_data(data_frame:str) -> pd.DataFrame:
     """ One function to read csv into a dataframe with appropriate types/formats.
         Note: read only pertinent columns, ignore the others.
     """
-    dtype_spec = {
-        'nom': str,
-        'lat_coor1': object,
-        'long_coor1': object,
-        'adr_num': str,
-        'adr_voie': str,
-        'com_cp': str,
-        'com_nom': str,
-        'tel1': str,
-        'freq_mnt': str,
-        'dermnt': object  # Nous devrons convertir cette colonne ultérieurement
-    }
+    # Lis le CSV et remplace toutes les strings égales à "" ou " " par des pd.NA
     df = pd.read_csv(data_frame,
                      delimiter= ',',
-                     dtype=dtype_spec,
                      na_values=['', ' ']
                        )
+    
+    # Remplace les "-" par des pd.NA 
     df['lat_coor1'] = df['lat_coor1'].replace('-', pd.NA)
     df['long_coor1'] = df['long_coor1'].replace('-', pd.NA)
+
+    # Convertis en float les valeurs de la colonne, si la valeur ne peut pas etre convertis => pd.NA
     df['lat_coor1'] = pd.to_numeric(df['lat_coor1'],errors='coerce')
     df['long_coor1'] = pd.to_numeric(df['long_coor1'],errors='coerce')
+
+    # Remplace les pd.NA par des np.NaN 
     df['lat_coor1'] = df['lat_coor1'].replace('<NA>', np.NaN)
     df['long_coor1'] = df['long_coor1'].replace('<NA>', np.NaN)
 
-    df['dermnt'] = pd.to_datetime(df['dermnt'], errors='coerce')
-    df['dermnt'] = df['dermnt'].replace(np.NaN, pd.NaT)
-    
+
+    # Replace NaN values by NA values, since those values are not numerical they cannot be considered as NaN values.
     df[['nom','adr_num', 'adr_voie', 'com_cp', 'com_nom', 'tel1', 'freq_mnt']] = df[['nom','adr_num', 'adr_voie', 'com_cp', 'com_nom', 'tel1', 'freq_mnt']].replace(np.NaN, pd.NA)
 
+    # Cas particulier, deux valeurs sont inversées dans le dans le csv de bas, la prof a décidé de directement les remplacer par des NA dès le formatage  => pd.NA
     df.loc[5, 'freq_mnt'] = pd.NA
     df.loc[5, 'dermnt'] = pd.NA
+
+    df = df.astype({
+    'nom': 'string',
+    'adr_num': 'string',
+    'adr_voie': 'string',
+    'com_cp': 'string',
+    'com_nom': 'string',
+    'tel1': 'string',
+    'freq_mnt': 'string',
+    'dermnt': 'string',
+
+})
+    df['dermnt'] = pd.to_datetime(df['dermnt'], errors='coerce')
+
+    for column in df.columns:
+        print(f"{column}: {df[column].dtype}")
 
     return df
 
@@ -74,6 +84,18 @@ def sanitize_data(df:pd.DataFrame) -> pd.DataFrame:
     sanitized_df = sanitize_cp(sanitized_df)
     sanitized_df = sanitize_frequence(sanitized_df)
 
+    sanitized_df = sanitized_df.astype({
+    'nom': 'string',
+    'adr_num': 'string',
+    'adr_voie': 'string',
+    'com_cp': 'string',
+    'com_nom': 'string',
+    'tel1': 'string',
+    'freq_mnt': 'string',
+    'dermnt': 'string',
+
+})
+    sanitized_df['dermnt'] = pd.to_datetime(sanitized_df['dermnt'], errors='coerce')
     return sanitized_df
 
 def sanitize_tel_number(df:pd.DataFrame) -> pd.DataFrame:
@@ -152,7 +174,6 @@ def sanitize_adr_voie(df: pd.DataFrame) -> pd.DataFrame:
 
         if "rue" in address:
             words = address.split()
-            print(words)
             for word in words:
                 if "-" in word:
                     word_to_correct_idx = words.index(word)
@@ -160,7 +181,6 @@ def sanitize_adr_voie(df: pd.DataFrame) -> pd.DataFrame:
                     splitted_name = [name.capitalize() for name in splitted_name]
                     corrected_name = splitted_name[0]+"-"+splitted_name[1]
                     words[word_to_correct_idx] = corrected_name
-                    print(words)
             address = " ".join(words)            
 
         return address.strip()
@@ -214,6 +234,18 @@ def frame_data(df: pd.DataFrame) -> pd.DataFrame:
     df.drop(['adr_num', 'adr_voie', 'com_cp', 'com_nom'], axis=1, inplace=True)
     # Insérer la colonne "address" en deuxième position
     df.insert(1, 'address', df.pop('address'))
+
+    df = df.astype({
+    'nom': 'string',
+    'address': 'string',
+    'tel1': 'string',
+    'freq_mnt': 'string',
+
+})
+    df['dermnt'] = pd.to_datetime(df['dermnt'], errors='coerce')
+    # for column in df.columns:
+    #     print(f"{column}: {df[column].dtype}")
+
     return df
 
 # once they are all done, call them in the general clean loading function
@@ -223,9 +255,10 @@ def load_clean_data(data_path:str=DATA_PATH)-> pd.DataFrame:
           .pipe(sanitize_data)
           .pipe(frame_data)
     )
+    print(df)
     return df
 
 
 # if the module is called, run the main loading function
 if __name__ == '__main__':
-    load_clean_data()
+    df = load_clean_data()
